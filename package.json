@@ -7,7 +7,7 @@
     "url": "git+https://github.com/Ju-yeop/wetube-reloaded.git"
   },
   "scripts": {
-    "dev": "nodemon --exec babel-node pindex.js"
+    "dev": "nodemon --exec npx babel-node src/server.js"
   },
   "author": "Yeop",
   "license": "MIT",
