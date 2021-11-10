@@ -1,30 +1,39 @@
 import express from "express";
 
 const PORT = 4000;
-
 const app = express();
+const date = new Date();
+const today = `${date.getFullYear()}.${date.getMonth()+1}.${date.getDate()}`;
 
-const handleHome = (req, res) => {
-    return res.send("<h1>This course is the best</h1>");
+const URLlogger = (req, res, next) => {
+    console.log(`Path: ${req.path}`);
+    next();
 };
 
-const handleAbout = (req, res) => {
-    return res.send("<h1>But i didn't understand this assignment exactly.</h1>");
+const Timelogger = (req, res, next) => {
+    console.log(`Time: ${today}`);
+    next();
 };
 
-const handleContact = (req, res) => {
-    return res.send("<h1>So i'm not sure how to do it</h1>");
+const Securitylogger = (req, res, next) => {
+    if(req.protocol === "https"){
+        console.log("Secure");
+    }else{
+        console.log("Insecure ❌");
+    }
+    next();
 };
 
-const handleLogin = (req, res) => {
-    return res.send("<h1>Does it correct answer?</h1>");
-};
+const Protectormiddleware = (req, res, next) => {
+    const URL = req.url;
+    if(URL === "/protected"){
+        return res.end();
+    }
+    next();
+}
 
-app.get("/", handleHome);
-app.get("/about", handleAbout);
-app.get("/contact", handleContact);
-app.get("/login", handleLogin);
+app.use(URLlogger, Timelogger, Securitylogger, Protectormiddleware);
+app.get("/", (req, res) => res.send("<h1>Home</h1>"));
+app.get("/protected", (req, res) => res.send("<h1>Protected</h1>"));
 
-const handleListening = () =>
-    console.log(`Server listening on port 4000 http://localhost:${PORT}`);
-app.listen(PORT, handleListening);
+app.listen(PORT, handleListen => console.log(`Go to http://localhost:${PORT}`));
