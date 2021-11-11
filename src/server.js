@@ -1,39 +1,20 @@
 import express from "express";
-
+import morgan from "morgan";
 const PORT = 4000;
 const app = express();
-const date = new Date();
-const today = `${date.getFullYear()}.${date.getMonth()+1}.${date.getDate()}`;
+const logger = morgan("dev  ");
 
-const URLlogger = (req, res, next) => {
-    console.log(`Path: ${req.path}`);
-    next();
+const home = (req, res) => {
+    console.log("I'll respond.");
+    return res.send("hello");
 };
 
-const Timelogger = (req, res, next) => {
-    console.log(`Time: ${today}`);
-    next();
+const login = (req,res) => {
+    return res.sed("login");
 };
 
-const Securitylogger = (req, res, next) => {
-    if(req.protocol === "https"){
-        console.log("Secure");
-    }else{
-        console.log("Insecure ❌");
-    }
-    next();
-};
+app.use(logger);
+app.get("/", home);
+app.get("/login", login);
 
-const Protectormiddleware = (req, res, next) => {
-    const URL = req.url;
-    if(URL === "/protected"){
-        return res.end();
-    }
-    next();
-}
-
-app.use(URLlogger, Timelogger, Securitylogger, Protectormiddleware);
-app.get("/", (req, res) => res.send("<h1>Home</h1>"));
-app.get("/protected", (req, res) => res.send("<h1>Protected</h1>"));
-
-app.listen(PORT, handleListen => console.log(`Go to http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Go to http://localhost:${PORT}`));
