@@ -19,7 +19,7 @@ const s3ImageUploader = multerS3({
 
 const s3VideoUploader = multerS3({
     s3: s3,
-    bucket: 'clone-metube.videos',
+    bucket: 'clone-metube/videos',
     acl: "public-read",
 });
 
