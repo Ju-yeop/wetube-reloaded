@@ -136,8 +136,9 @@ export const postEdit = async (req, res) => {
         body: {name,email,username,location},
         file
     } = req;
+    const isHeroku = process.env.NODE_ENV === "production";
     const updatedUser = await User.findByIdAndUpdate(_id, {
-        avatarUrl: file ? file.location : avatarUrl, name, email, username, location,
+        avatarUrl: file ? (isHeroku ? file.location : file.path) : avatarUrl, name, email, username, location,
     }, {new:true});
     req.session.user = updatedUser;
     return res.redirect("/users/edit");
